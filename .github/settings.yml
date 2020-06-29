@@ -24,16 +24,22 @@ repository:
 labels:
   - name: "Category: Prelude"
     color: "#d1f0fd"
-    description: The prelude library.
+    description: The enso-prelude library
   - name: "Category: Documentation"
     color: "#d1f0fd"
-    description: Repository documentation.
+    description: Repository documentation
   - name: "Category: External"
     color: "#d1f0fd"
     description: External issues
   - name: "Category: Build"
     color: "#d1f0fd"
     description: The project build and CI/CD
+  - name: "Category: Shapely"
+    color: "#d1f0fd"
+    description: The shapely library
+  - name: "Category: Macro Utils"
+    color: "#d1f0fd"
+    description: The macro-utils library
 
   - name: "Change: Breaking"
     color: "#ffdce5"
@@ -149,6 +155,12 @@ branches:
       required_status_checks:
         # Require branches to be up to date before merging.
         strict: true
-        contexts: ["Test Libraries (macOS-latest)", "Test Libraries (ubuntu-latest)", "Test Libraries (windows-latest)", "license/cla"]
+        contexts:
+        - "Test Native (macOS-latest)"
+        - "Test Native (ubuntu-latest)"
+        - "Test Native (windows-latest)"
+        - "Test WASM"
+        - "Lint"
+        - "license/cla"
       enforce_admins: null
       restrictions: null

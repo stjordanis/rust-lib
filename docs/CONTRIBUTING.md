@@ -74,8 +74,7 @@ In order to build these libraries you will need the following tools.
 
 - [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html),
   the standard rust build tool.
-- [Nightly rustc]. We recommend using [rustup](https://rustup.rs/) to manage
-  your rust toolchains.
+- [Rustup](https://rustup.rs) for managing rust toolchains.
 
 ### Getting the Sources
 Given you've probably been reading this document on GitHub, you might have an
@@ -96,6 +95,15 @@ git clone https://github.com/enso-org/rust-lib.git
 git clone git@github.com:enso-org/rust-lib.git
 ```
 
+### Getting Set Up
+You can get set up by running the following commands in the cloned repository.
+
+```bash
+rustup toolchain install nightly-2019-11-04
+rustup override set nightly-2019-11-04
+rustup component add clippy
+```
+
 ### Building the Libraries
 Building these libraries is as simple as using the cargo build tool. You can run
 `cargo build` to build all of the libraries, or `cargo build $lib`, where `$lib`
@@ -105,9 +113,11 @@ is the name of one of the libraries in this project.
 If you are having issues building the libraries, please check the list below
 before filing an issue with us.
 
-- `error[E0554]: `#![feature]` may not be used on the $chan release channel`:
+- `error[E0554]`: `#![feature]` may not be used on the $chan release channel`:
   The version of `rustc` seen by `cargo` is not a nightly build, and a nightly
   build is required.
+- **Compile Errors:** Please check that you are on the correct `rustc` nightly
+  (`nightly-2019-11-04`).
 
 If your problem was not listed above, please
 [file a bug report](https://github.com/enso-org/rust-lib/issues/new?assignees=&labels=Type%3A+Bug&template=bug-report.md&title=)

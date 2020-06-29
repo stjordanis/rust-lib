@@ -1,6 +1,11 @@
 [workspace]
 
-members = []
+members = [
+    "src/macro-utils",
+    "src/enso-prelude",
+    "src/shapely",
+    "internal/shapely-macros"
+]
 
 [profile.dev]
 opt-level = 0
@@ -21,3 +26,4 @@ debug     = false
 opt-level = 0
 lto       = false
 debug     = true
+
