@@ -1,0 +1,24 @@
+
+##########
+## Rust ##
+##########
+
+Cargo.lock
+**/*.rs.bk
+wasm-pack.log
+target/
+
+############
+## System ##
+############
+
+.DS_Store
+
+######################
+## Tooling Specific ##
+######################
+
+.idea/
+.vscode/
+*.swp
+.projections.json
