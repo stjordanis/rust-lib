@@ -36,10 +36,10 @@ labels:
     description: The project build and CI/CD
   - name: "Category: Shapely"
     color: "#d1f0fd"
-    description: The shapely library
+    description: The enso-shapely library
   - name: "Category: Macro Utils"
     color: "#d1f0fd"
-    description: The macro-utils library
+    description: The enso-macro-utils library
 
   - name: "Change: Breaking"
     color: "#ffdce5"
@@ -156,11 +156,12 @@ branches:
         # Require branches to be up to date before merging.
         strict: true
         contexts:
+        - "Check"
+        - "Lint"
         - "Test Native (macOS-latest)"
         - "Test Native (ubuntu-latest)"
         - "Test Native (windows-latest)"
         - "Test WASM"
-        - "Lint"
         - "license/cla"
       enforce_admins: null
       restrictions: null
