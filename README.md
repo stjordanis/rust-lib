@@ -59,7 +59,3 @@ highly appreciate every contribution.
 
 If you'd like to help us out by contributing to this repository, please take a
 look at the [contributing guide](./docs/CONTRIBUTING.md).
-
-<a href="https://github.com/enso-org/enso/graphs/contributors">
-  <img src="https://opencollective.com/enso-language/contributors.svg?width=890&button=false">
-</a>
