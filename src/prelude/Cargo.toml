@@ -1,12 +1,12 @@
 [package]
 name    = "enso-prelude"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Enso Team <enso-dev@enso.org>"]
 edition = "2018"
 
 description  = "An augmented standard library in the vein of Haskell's prelude."
 readme       = "README.md"
-homepage     = "https://github.com/enso-org/rust-lib/src/enso-prelude"
+homepage     = "https://github.com/enso-org/rust-lib/src/prelude"
 repository   = "https://github.com/enso-org/rust-lib"
 license-file = "../../LICENSE"
 
@@ -19,7 +19,7 @@ publish = true
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-enso-shapely  = { version = "0.1.0" , path = "../enso-shapely/impl" }
+enso-shapely  = { version = "0.1.1" , path = "../shapely/impl" }
 
 boolinator   = "2.4.0"
 derivative   = "1.0.3"
@@ -34,7 +34,7 @@ paste        = "0.1"
 shrinkwraprs = "0.3.0"
 smallvec     = "1.0.0"
 weak-table   = "0.2.3"
-wasm-bindgen = { version = "=0.2.58" , features = ["nightly"]      }
+wasm-bindgen = { version = "=0.2.58" , features = ["nightly"] }
 
 # TODO: should be behind a flag, as the `nalgebra` package is pretty big and this crate would be
 #       also useful for projects which do not require `nalgebra`.

@@ -15,7 +15,9 @@ mod data;
 mod macros;
 mod option;
 mod phantom;
+mod rc;
 mod reference;
+mod result;
 mod std_reexports;
 mod string;
 mod tp;
@@ -27,7 +29,9 @@ pub use data::*;
 pub use macros::*;
 pub use option::*;
 pub use phantom::*;
+pub use rc::*;
 pub use reference::*;
+pub use result::*;
 pub use std_reexports::*;
 pub use string::*;
 pub use tp::*;
@@ -50,6 +54,10 @@ pub use weak_table::WeakKeyHashMap;
 pub use weak_table::WeakValueHashMap;
 pub use weak_table;
 
+pub use std::collections::hash_map::DefaultHasher;
+pub use std::hash::Hash;
+pub use std::hash::Hasher;
+
 use std::cell::UnsafeCell;
 
 
@@ -59,7 +67,7 @@ use std::cell::UnsafeCell;
 // =================
 
 /// A zero-overhead newtype which provides immutable access to its content. Of course this does not
-/// apply to native-only mutability of the wrapped data. A good use case of this structure is when you
+/// apply to internal mutability of the wrapped data. A good use case of this structure is when you
 /// want to pass an ownership to a structure, allow access all its public fields, but do not allow
 /// their modification.
 #[derive(Clone,Copy,Default)]
@@ -125,7 +133,7 @@ pub trait ToImpl: Sized {
 impl<T> ToImpl for T {}
 
 // TODO
-// This impl should be hidden behind a flag. Not everybody using enso-prelude want to import nalgebra.
+// This impl should be hidden behind a flag. Not everybody using prelude want to import nalgebra.
 impl <T,R,C,S> TypeDisplay for nalgebra::Matrix<T,R,C,S>
 where T:nalgebra::Scalar, R:nalgebra::DimName, C:nalgebra::DimName {
     fn type_display() -> String {
@@ -216,7 +224,7 @@ impl<T:Default> Default for CloneCell<T> {
 // =================
 
 #[derive(Debug)]
-pub struct CloneRefCell<T> {
+pub struct CloneRefCell<T:?Sized> {
     data : UnsafeCell<T>
 }
 
@@ -322,5 +330,29 @@ impl<T:?Sized> WeakRef for Weak<T> {
     type StrongRef = Rc<T>;
     fn upgrade(&self) -> Option<Self::StrongRef> {
         Weak::upgrade(self)
+    }
+}
+
+
+
+// ==================
+// === Result Ops ===
+// ==================
+
+/// Allows extracting the element from `Result<T,T>` for any `T`.
+#[allow(missing_docs)]
+pub trait ResultGet {
+    type Item;
+    /// Allows extracting the element from `Result<T,T>` for any `T`.
+    fn unwrap_both(self) -> Self::Item;
+}
+
+impl<T> ResultGet for Result<T,T> {
+    type Item = T;
+    fn unwrap_both(self) -> T {
+        match self {
+            Ok  (t) => t,
+            Err (t) => t,
+        }
     }
 }

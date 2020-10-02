@@ -1,12 +1,12 @@
 [package]
 name    = "enso-shapely-macros"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Enso Team <enso-dev@enso.org>"]
 edition = "2018"
 
 description  = "Automated typeclass derivation."
 readme       = "README.md"
-homepage     = "https://github.com/enso-org/rust-lib/src/shapely-macros"
+homepage     = "https://github.com/enso-org/rust-lib/src/shapely/macros"
 repository   = "https://github.com/enso-org/rust-lib"
 license-file = "../../../LICENSE"
 
@@ -22,7 +22,7 @@ proc-macro = true
 default = []
 
 [dependencies]
-enso-macro-utils  = { version = "0.1.0"  , path = "../../enso-macro-utils" }
+enso-macro-utils  = { version = "0.1.1"  , path = "../../macro-utils" }
 proc-macro2  = "1.0"
 quote        = "1.0"
 Inflector    = "0.11.4"

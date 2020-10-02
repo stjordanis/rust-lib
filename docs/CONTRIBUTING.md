@@ -11,6 +11,7 @@ major sections of this document are linked below:
 - [Issues](#issues)
 - [Bug Reports](#bug-reports)
 - [Hacking on These Libraries](#hacking-on-these-libraries)
+- [Developing in Conjunction with Enso / IDE](#developing-in-conjunction-with-enso--ide)
 - [Pull Requests](#pull-requests)
 - [Issue Triage](#issue-triage)
 
@@ -85,6 +86,8 @@ In order to build these libraries you will need the following tools.
 - [wasm-pack](https://github.com/rustwasm/wasm-pack) for building WASM versions
   of the libraries and running WASM tests.
 
+We only support the current LTS node version. This is currently `v12.18.4`.
+
 ### Getting the Sources
 
 Given you've probably been reading this document on GitHub, you might have an
@@ -105,7 +108,7 @@ git clone https://github.com/enso-org/rust-lib.git
 git clone git@github.com:enso-org/rust-lib.git
 ```
 
-### Getting Set Up
+### Getting Set Up (Rust)
 
 You can get set up by running the following commands in the cloned repository.
 
@@ -135,6 +138,62 @@ before filing an issue with us.
 If your problem was not listed above, please
 [file a bug report](https://github.com/enso-org/rust-lib/issues/new?assignees=&labels=Type%3A+Bug&template=bug-report.md&title=)
 in our issue tracker and we will get back to you as soon as possible.
+
+## Developing in Conjunction with Enso / IDE
+
+As these libraries are used frequently by both the
+[Enso language](https://github.com/enso-org/enso) and the
+[Enso IDE](https://github.com/enso-org/ide), it is often necessary to develop
+these libraries alongside those projects. This section deals with the workflow
+for doing so.
+
+### Patch Overrides
+
+[Cargo](https://doc.rust-lang.org/cargo/), the Rust package manager and build
+tool, has support for
+[overriding dependencies](https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html).
+The best way that we've found to use this functionality for developing these
+libraries in conjunction with another project is to use a
+[patch version override](https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html#the-patch-section).
+
+As the patch paths care able to point _outside_ the current Cargo project, you
+can check out this repository and the other one side by side and set the patch
+paths for the libraries you want to develop.
+
+The following is an example:
+
+```toml
+[patch.crates-io]
+enso-automata       = { path = "../rust-lib/src/automata"       }
+enso-data           = { path = "../rust-lib/src/data"           }
+enso-generics       = { path = "../rust-lib/src/generics"       }
+enso-logger         = { path = "../rust-lib/src/logger"         }
+enso-macro-utils    = { path = "../rust-lib/src/macro-utils"    }
+enso-optics         = { path = "../rust-lib/src/optics"         }
+enso-prelude        = { path = "../rust-lib/src/prelude"        }
+enso-shapely        = { path = "../rust-lib/src/shapely/impl"   }
+enso-shapely-macros = { path = "../rust-lib/src/shapely/macros" }
+```
+
+### PR Workflow
+
+This does, however, create a bit of a dependency for the order in which you
+submit your PRs. We recommend working as follows if you need to develop one of
+these libraries alongside a project.
+
+1.  Clone this repository alongside the project repository, such that it is at
+    the relative path `../rust-lib`.
+2.  In your project's `Cargo.toml`, add a patch override for each library in
+    this repo that you want to work on.
+3.  When you are done, you need to bump the library versions for the changed
+    libraries, and PR your changes to this repo. Make sure that you _only_ do
+    this after you're done, as before can cause some issues with `Cargo.lock`.
+4.  Once the PR is accepted, you need to follow the
+    [release process](./release-policy.md) to release new versions to
+    [`crates.io`](https://crates.io).
+5.  Once those versions are released, you need to first remove the patch
+    overrides and then update the versions in your project.
+6.  You can now PR your changes to the main project.
 
 ## Pull Requests
 
