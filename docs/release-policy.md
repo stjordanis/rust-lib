@@ -64,6 +64,13 @@ work.
 
 1.  `enso-macro-utils`
 2.  `enso-generics`
+3.  `enso-shapely-macros`
+4.  `enso-shapely`
+5.  `enso-prelude`
+6.  `enso-data`
+7.  `enso-optics`
+8.  `enso-logger`
+9.  `enso-automata`
 
 > The actionables for this section are:
 >
