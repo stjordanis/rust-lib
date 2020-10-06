@@ -12,7 +12,7 @@ license-file = "../../LICENSE"
 
 keywords   = ["read", "UTF"]
 
-publish = false
+publish = true
 
 [lib]
 name       = "lazy_reader"
