@@ -21,16 +21,13 @@ impl Rule {
 #[test]
 fn define_exported_automaton() {
     // The Patterns
-    let a_word = Pattern::char('a').many1();
-    let b_word = Pattern::char('b').many1();
-    let any    = Pattern::any();
-    let end    = Pattern::eof();
+    let a = Pattern::char('a');
+    let b = Pattern::char('b');
+    let ab = &a >> &b;
 
     let patterns = vec![
-        Rule::new(&a_word,"rule_1"),
-        Rule::new(&b_word,"rule_2"),
-        Rule::new(&end,"rule_3"),
-        Rule::new(&any,"rule_4"),
+        Rule::new(&a,"rule_0"),
+        Rule::new(&ab,"rule_1"),
     ];
 
     // The NFA
