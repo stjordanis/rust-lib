@@ -111,6 +111,7 @@ impl From<Vec<Vec<usize>>> for Matrix<State> {
 // === Callback ===
 // ================
 
+// TODO [AA] Remove this.
 /// The callback associated with an arbitrary state of a finite automaton.
 ///
 /// It contains the rust code that is intended to be executed after encountering a

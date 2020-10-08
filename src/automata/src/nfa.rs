@@ -76,6 +76,9 @@ impl Nfa {
         let id = self.states.len();
         self.states.push(default());
         State::new(id)
+        // let foo = State::new(id);
+        // self[foo].export = true;
+        // foo
     }
 
     /// Adds a new state to the NFA, marks it as an exported state, and returns its identifier.
@@ -102,15 +105,15 @@ impl Nfa {
         self[source].links.push(Transition::new(symbols.clone(),target));
     }
 
-    /// Return the number of states in the automaton.
-    pub fn num_states(&self) -> usize {
-        self.states.len()
-    }
-
-    /// Obtain an immutable iterator over the states in the automaton.
-    pub fn iter_states(&self) -> std::slice::Iter<state::Data> {
-        self.states.iter()
-    }
+    // /// Return the number of states in the automaton.
+    // pub fn num_states(&self) -> usize {
+    //     self.states.len()
+    // }
+    //
+    // /// Obtain an immutable iterator over the states in the automaton.
+    // pub fn iter_states(&self) -> std::slice::Iter<state::Data> {
+    //     self.states.iter()
+    // }
 
     // TODO [AA] De-duplicate these?
     // FIXME [AA,WD]: It seems that it should be possible to simplify this function. This would
