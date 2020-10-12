@@ -63,7 +63,7 @@ impl Nfa {
         Self {start,alphabet,states}.init_start_state()
     }
 
-    // TODO [AA] Doc
+    /// Initialize the start state for the NFA.
     fn init_start_state(mut self) -> Self {
         let start = self.new_state();
         self[start].export = true;
@@ -76,9 +76,6 @@ impl Nfa {
         let id = self.states.len();
         self.states.push(default());
         State::new(id)
-        // let foo = State::new(id);
-        // self[foo].export = true;
-        // foo
     }
 
     /// Adds a new state to the NFA, marks it as an exported state, and returns its identifier.
@@ -105,17 +102,6 @@ impl Nfa {
         self[source].links.push(Transition::new(symbols.clone(),target));
     }
 
-    // /// Return the number of states in the automaton.
-    // pub fn num_states(&self) -> usize {
-    //     self.states.len()
-    // }
-    //
-    // /// Obtain an immutable iterator over the states in the automaton.
-    // pub fn iter_states(&self) -> std::slice::Iter<state::Data> {
-    //     self.states.iter()
-    // }
-
-    // TODO [AA] De-duplicate these?
     // FIXME [AA,WD]: It seems that it should be possible to simplify this function. This would
     // drastically save memory (50-70%):
     // 1. We are always adding epsilon connection on the beginning. This should not be needed, but
@@ -123,13 +109,15 @@ impl Nfa {
     // 2. In other places we have similar things. For example, in `Or` pattern we use epsilon
     //    connections to merge results, but we could theoretically first create the output, and
     //    then expand sub-patterns with the provided output.
+    // Additionally, the epsilon edges here are _necessary_, but should be investigated as a point
+    // of future simplification.
     /// Transforms a pattern to connected NFA states by using the algorithm described
     /// [here](https://www.youtube.com/watch?v=RYNN-tb9WxI).
     /// The asymptotic complexity is linear in number of symbols.
-    pub fn new_pattern(&mut self, current:State, pattern:impl AsRef<Pattern>) -> State {
+    pub fn new_pattern(&mut self, source:State, pattern:impl AsRef<Pattern>) -> State {
         let pattern = pattern.as_ref();
-        //let current = self.new_state();
-        //self.connect(source,current);
+        let current = self.new_state();
+        self.connect(source,current);
         let state = match pattern {
             Pattern::Range(range) => {
                 let state = self.new_state();
@@ -170,6 +158,8 @@ impl Nfa {
     /// The asymptotic complexity is linear in number of symbols.
     pub fn new_pattern_to(&mut self, source:State, target:State, pattern:impl AsRef<Pattern>) {
         let pattern = pattern.as_ref();
+        let current = self.new_state();
+        self.connect(source,current);
         match pattern {
             Pattern::Range(range) => {
                 self.connect_via(source,target,range);

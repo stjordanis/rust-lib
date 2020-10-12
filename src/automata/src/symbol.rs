@@ -4,6 +4,15 @@ use crate::prelude::*;
 
 
 
+// =============
+// === Types ===
+// =============
+
+/// The type of a symbol index.
+pub type SymbolIndex = u64;
+
+
+
 // ==============
 // === Symbol ===
 // ==============
@@ -12,19 +21,19 @@ use crate::prelude::*;
 #[derive(Clone,Debug,PartialEq,Eq,PartialOrd,Ord,Hash)]
 #[allow(missing_docs)]
 pub struct Symbol {
-    pub index : u64,
+    pub index : SymbolIndex,
     pub name  : String
 }
 
 impl Symbol {
     /// End of line symbol.
     pub fn eof() -> Self {
-        Self::new(u64::max_value())
+        Self::new(SymbolIndex::max_value())
     }
 
     /// Invalid symbol.
     pub fn invalid() -> Self {
-        Self::new(u64::max_value() - 1)
+        Self::new(SymbolIndex::max_value() - 1)
     }
 
     /// Null symbol.
@@ -33,13 +42,13 @@ impl Symbol {
     }
 
     /// Constructor.
-    pub fn new(index:u64) -> Self {
+    pub fn new(index:SymbolIndex) -> Self {
         let name = "unnamed".into();
         Self {index,name}
     }
 
     /// Named constructor.
-    pub fn new_named(index:u64, name:impl Into<String>) -> Self {
+    pub fn new_named(index:SymbolIndex, name:impl Into<String>) -> Self {
         let name = name.into();
         Self {index,name}
     }
@@ -73,7 +82,7 @@ impl From<u64> for Symbol {
 
 impl From<char> for Symbol {
     fn from(ch:char) -> Symbol {
-        Symbol::new_named(ch as u64,format!("{}",ch))
+        Symbol::new_named(ch as SymbolIndex,format!("{}",ch))
     }
 }
 

@@ -122,6 +122,6 @@ impl Deref for SealedSegmentation {
 impl From<&Segmentation> for SealedSegmentation {
     fn from(s:&Segmentation) -> Self {
         let division_map = s.divisions.iter().cloned().enumerate().map(|(ix,s)|(s,ix)).collect();
-        Self {division_map}
+        Self{division_map}
     }
 }

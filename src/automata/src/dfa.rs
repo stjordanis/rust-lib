@@ -107,25 +107,6 @@ impl From<Vec<Vec<usize>>> for Matrix<State> {
 
 
 
-// ================
-// === Callback ===
-// ================
-
-// TODO [AA] Remove this.
-/// The callback associated with an arbitrary state of a finite automaton.
-///
-/// It contains the rust code that is intended to be executed after encountering a
-/// [`pattern`](super::pattern::Pattern) that causes the associated state transition.
-#[derive(Clone,Debug,PartialEq,Eq)]
-pub struct RuleExecutable {
-    /// A description of the priority with which the callback is constructed during codegen.
-    pub priority: usize,
-    /// The rust code that will be executed when running this callback.
-    pub code: String,
-}
-
-
-
 // ===================
 // === Conversions ===
 // ===================
@@ -170,6 +151,16 @@ impl From<&Nfa> for Dfa {
             i += 1;
         }
 
+        // let mut callbacks = vec![None; dfa_eps_ixs.len()];
+        // let     priority  = dfa_eps_ixs.len();
+        // for (dfa_ix, epss) in dfa_eps_ixs.into_iter().enumerate() {
+        //     let has_name = |&key:&state::Identifier| nfa.states[key.id].name.is_some();
+        //     if let Some(eps) = epss.into_iter().find(has_name) {
+        //         let code          = nfa.states[eps.id].name.as_ref().cloned().unwrap();
+        //         callbacks[dfa_ix] = Some(RuleExecutable {code,priority});
+        //     }
+        // }
+
         let mut sources = vec![];
         for epss in dfa_eps_ixs.into_iter() {
             sources.push(epss.into_iter().filter(|state| nfa[*state].export).collect_vec());
@@ -177,7 +168,7 @@ impl From<&Nfa> for Dfa {
 
         let alphabet = (&nfa.alphabet).into();
         let links    = dfa_mat;
-        Dfa {alphabet,links,sources}
+        Dfa{alphabet,links,sources}
     }
 }
 
