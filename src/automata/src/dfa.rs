@@ -151,16 +151,6 @@ impl From<&Nfa> for Dfa {
             i += 1;
         }
 
-        // let mut callbacks = vec![None; dfa_eps_ixs.len()];
-        // let     priority  = dfa_eps_ixs.len();
-        // for (dfa_ix, epss) in dfa_eps_ixs.into_iter().enumerate() {
-        //     let has_name = |&key:&state::Identifier| nfa.states[key.id].name.is_some();
-        //     if let Some(eps) = epss.into_iter().find(has_name) {
-        //         let code          = nfa.states[eps.id].name.as_ref().cloned().unwrap();
-        //         callbacks[dfa_ix] = Some(RuleExecutable {code,priority});
-        //     }
-        // }
-
         let mut sources = vec![];
         for epss in dfa_eps_ixs.into_iter() {
             sources.push(epss.into_iter().filter(|state| nfa[*state].export).collect_vec());
