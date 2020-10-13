@@ -13,7 +13,6 @@ use std::collections::BTreeSet;
 use std::ops::RangeInclusive;
 
 
-
 // =============
 // === Types ===
 // =============
@@ -234,7 +233,12 @@ impl Nfa {
         matrix
     }
 
-    /// Convert the automata to a GraphViz Dot code for the deubgging purposes.
+    /// Get a reference to the alphabet used by the automaton.
+    pub fn alphabet(&self) -> &alphabet::Segmentation {
+        &self.alphabet
+    }
+
+    /// Convert the automata to a GraphViz Dot code for deubgging purposes.
     pub fn as_graphviz_code(&self) -> String {
         let mut out = String::new();
         for (ix,state) in self.states.iter().enumerate() {

@@ -45,10 +45,13 @@ fn define_exported_automaton() {
     }
     states.push(end);
 
+    println!("{:?}",nfa.alphabet());
+
     // The DFA
     let dfa = Dfa::from(&nfa);
+    println!("{:?}",dfa.alphabet);
 
-    println!("States: {:?}",states);
-    println!("Callbacks: {:?}",callbacks);
-    println!("Sources: {:?}",dfa.sources);
+    // println!("States: {:?}",states);
+    // println!("Callbacks: {:?}",callbacks);
+    // println!("Sources: {:?}",dfa.sources);
 }
