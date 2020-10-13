@@ -49,26 +49,22 @@ use std::ops::RangeInclusive;
 #[derive(Clone,Debug,PartialEq,Eq)]
 #[allow(missing_docs)]
 pub struct Segmentation {
-    /// Because Symbol now has a name in it, these don't map to the same thing.
     pub divisions : BTreeSet<Symbol>
 }
 
 impl Segmentation {
     /// Inserts a range of symbols into the alphabet.
-    ///
-    /// Insertion will replace any symbol with the same index if a range bound is the same as a
-    /// previously inserted symbol.
     pub fn insert(&mut self,range:RangeInclusive<Symbol>) {
-        self.divisions.replace(range.start().clone());
+        self.divisions.insert(range.start().clone());
         let end = range.end().clone();
-        end.next().for_each(|t| self.divisions.replace(t));
+        end.next().for_each(|t| self.divisions.insert(t));
     }
 
     /// Creates a [`Segmentation`] from an input set of divisions.
     pub fn from_divisions(divisions:&[u64]) -> Self {
         let mut dict = Self::default();
         for val in divisions {
-            dict.divisions.replace(Symbol::from(*val));
+            dict.divisions.insert(Symbol::from(*val));
         }
         dict
     }
@@ -78,8 +74,6 @@ impl Segmentation {
         self.into()
     }
 }
-
-// TODO [AA] Tests for correct insertion behaviour.
 
 
 // === Trait Impls ===
@@ -128,6 +122,6 @@ impl Deref for SealedSegmentation {
 impl From<&Segmentation> for SealedSegmentation {
     fn from(s:&Segmentation) -> Self {
         let division_map = s.divisions.iter().cloned().enumerate().map(|(ix,s)|(s,ix)).collect();
-        Self{division_map}
+        Self {division_map}
     }
 }

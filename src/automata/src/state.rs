@@ -5,7 +5,7 @@ use crate::symbol::Symbol;
 
 use crate::prelude::*;
 
-use crate::nfa::Nfa; // FIXME [AA,WD] Ideally this wouldn't need to be imported.
+use crate::nfa::Nfa; // FIXME
 
 
 

@@ -13,6 +13,7 @@ use std::collections::BTreeSet;
 use std::ops::RangeInclusive;
 
 
+
 // =============
 // === Types ===
 // =============
@@ -54,7 +55,7 @@ pub struct Nfa {
 }
 
 impl Nfa {
-    /// Construct a new non-deterministic finite automaton.
+    /// Constructor.
     pub fn new() -> Self {
         let start    = default();
         let alphabet = default();
@@ -62,7 +63,28 @@ impl Nfa {
         Self {start,alphabet,states}.init_start_state()
     }
 
-    /// Initialize the start state for the NFA.
+    /// Convert the automata to a GraphViz Dot code for the deubgging purposes.
+    pub fn as_graphviz_code(&self) -> String {
+        let mut out = String::new();
+        for (ix,state) in self.states.iter().enumerate() {
+            let opts = if state.export { "" } else {
+                "[fillcolor=\"#EEEEEE\" fontcolor=\"#888888\"]"
+            };
+            out += &format!("node_{}[label=\"{}\"]{}\n",ix,ix,opts);
+            for link in &state.links {
+                out += &format!(
+                    "node_{} -> node_{}[label=\"{}\"]\n",ix,link.target.id(),link.display_symbols()
+                );
+            }
+            for link in &state.epsilon_links {
+                out += &format!("node_{} -> node_{}[style=dashed]\n",ix,link.id());
+            }
+        }
+        let opts = "node [shape=circle style=filled fillcolor=\"#4385f5\" fontcolor=\"#FFFFFF\" \
+        color=white penwidth=5.0 margin=0.1 width=0.5 height=0.5 fixedsize=true]";
+        format!("digraph G {{\n{}\n{}\n}}\n",opts,out)
+    }
+
     fn init_start_state(mut self) -> Self {
         let start = self.new_state();
         self[start].export = true;
@@ -84,11 +106,6 @@ impl Nfa {
         state
     }
 
-    /// Get the vector of states defined for this automaton.
-    pub fn states(&self) -> &Vec<state::Data> {
-        &self.states
-    }
-
     /// Creates an epsilon transition between two states.
     ///
     /// Whenever the automaton happens to be in `source` state it can immediately transition to the
@@ -106,22 +123,20 @@ impl Nfa {
         self[source].links.push(Transition::new(symbols.clone(),target));
     }
 
-    // FIXME [AA,WD]: It seems that it should be possible to simplify this function. This would
+    // FIXME[WD]: It seems that it should be possible to simplify this function. This would
     // drastically save memory (50-70%):
     // 1. We are always adding epsilon connection on the beginning. This should not be needed, but
     //    if we did it this way, it means there is a corner case probably. To be checked.
     // 2. In other places we have similar things. For example, in `Or` pattern we use epsilon
     //    connections to merge results, but we could theoretically first create the output, and
     //    then expand sub-patterns with the provided output.
-    // Additionally, the epsilon edges here are _necessary_, but should be investigated as a point
-    // of future simplification.
     /// Transforms a pattern to connected NFA states by using the algorithm described
     /// [here](https://www.youtube.com/watch?v=RYNN-tb9WxI).
     /// The asymptotic complexity is linear in number of symbols.
-    pub fn new_pattern(&mut self, source:State, pattern:impl AsRef<Pattern>) -> State {
+    pub fn new_pattern(&mut self, current:State, pattern:impl AsRef<Pattern>) -> State {
         let pattern = pattern.as_ref();
-        let current = self.new_state();
-        self.connect(source,current);
+        //let current = self.new_state();
+        //self.connect(source,current);
         let state = match pattern {
             Pattern::Range(range) => {
                 let state = self.new_state();
@@ -162,8 +177,6 @@ impl Nfa {
     /// The asymptotic complexity is linear in number of symbols.
     pub fn new_pattern_to(&mut self, source:State, target:State, pattern:impl AsRef<Pattern>) {
         let pattern = pattern.as_ref();
-        let current = self.new_state();
-        self.connect(source,current);
         match pattern {
             Pattern::Range(range) => {
                 self.connect_via(source,target,range);
@@ -236,33 +249,6 @@ impl Nfa {
             }
         }
         matrix
-    }
-
-    /// Get a reference to the alphabet used by the automaton.
-    pub fn alphabet(&self) -> &alphabet::Segmentation {
-        &self.alphabet
-    }
-
-    /// Convert the automata to a GraphViz Dot code for deubgging purposes.
-    pub fn as_graphviz_code(&self) -> String {
-        let mut out = String::new();
-        for (ix,state) in self.states.iter().enumerate() {
-            let opts = if state.export { "" } else {
-                "[fillcolor=\"#EEEEEE\" fontcolor=\"#888888\"]"
-            };
-            out += &format!("node_{}[label=\"{}\"]{}\n",ix,ix,opts);
-            for link in &state.links {
-                out += &format!(
-                    "node_{} -> node_{}[label=\"{}\"]\n",ix,link.target.id(),link.display_symbols()
-                );
-            }
-            for link in &state.epsilon_links {
-                out += &format!("node_{} -> node_{}[style=dashed]\n",ix,link.id());
-            }
-        }
-        let opts = "node [shape=circle style=filled fillcolor=\"#4385f5\" fontcolor=\"#FFFFFF\" \
-        color=white penwidth=5.0 margin=0.1 width=0.5 height=0.5 fixedsize=true]";
-        format!("digraph G {{\n{}\n{}\n}}\n",opts,out)
     }
 }
 

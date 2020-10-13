@@ -107,6 +107,24 @@ impl From<Vec<Vec<usize>>> for Matrix<State> {
 
 
 
+// ================
+// === Callback ===
+// ================
+
+/// The callback associated with an arbitrary state of a finite automaton.
+///
+/// It contains the rust code that is intended to be executed after encountering a
+/// [`pattern`](super::pattern::Pattern) that causes the associated state transition.
+#[derive(Clone,Debug,PartialEq,Eq)]
+pub struct RuleExecutable {
+    /// A description of the priority with which the callback is constructed during codegen.
+    pub priority: usize,
+    /// The rust code that will be executed when running this callback.
+    pub code: String,
+}
+
+
+
 // ===================
 // === Conversions ===
 // ===================
@@ -158,7 +176,7 @@ impl From<&Nfa> for Dfa {
 
         let alphabet = (&nfa.alphabet).into();
         let links    = dfa_mat;
-        Dfa{alphabet,links,sources}
+        Dfa {alphabet,links,sources}
     }
 }
 
