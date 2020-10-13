@@ -84,6 +84,11 @@ impl Nfa {
         state
     }
 
+    /// Get the vector of states defined for this automaton.
+    pub fn states(&self) -> &Vec<state::Data> {
+        &self.states
+    }
+
     /// Creates an epsilon transition between two states.
     ///
     /// Whenever the automaton happens to be in `source` state it can immediately transition to the
